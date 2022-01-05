@@ -1,0 +1,20 @@
+{
+  "name": "throne-of-glass-api",
+  "version": "1.0.0",
+  "description": "A node-express api with web scrapping and planetscale db",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon src/app.ts",
+    "ts:build": "rm -rf ./dist && tsc",
+    "prestart": "npm run ts:build",
+    "start": "node dist/app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Oyegbile Praise",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^2.0.15",
+    "ts-node": "^10.4.0",
+    "typescript": "^4.5.4"
+  }
+}
