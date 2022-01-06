@@ -16,7 +16,7 @@ const getCharacterPageName = async () => {
 
     const categories = $('ul.category-page__members-for-char');
 
-    const characterPageNames = ["name"];
+    const characterPageNames = [];
 
     for (let i = 0; i < categories.length; i++) {
         const ul = categories[i];
@@ -30,7 +30,7 @@ const getCharacterPageName = async () => {
             const name = path.replace('/wiki/', '');
 
             characterPageNames.push(name);
-            console.log(name);
+            // console.log(name);
             
         }
         
@@ -41,10 +41,20 @@ const getCharacterPageName = async () => {
 
 }
 
-getCharacterPageName()
+// getCharacterPageName()
 
 const getCharacterInfo = async (chaacterName: string) => {
+    const baseUrl = "https://throneofglass.fandom.com/wiki/" + chaacterName;
 
+    const {data} = await axios.get(baseUrl);
+
+    const $ = cheerio.load(data);
+
+    const name = $('h2[data-source="name"]').text()
+    const species = $('div[data-source="species"] > div.pi-data-value.pi-font').text()
+    const image = $('.image.image-thumbnail > img').attr('src')
+    console.log(species);
+    
 }
 
 const loadCharacter = async () => {
@@ -54,3 +64,5 @@ const loadCharacter = async () => {
         
     }
 }
+
+loadCharacter()
