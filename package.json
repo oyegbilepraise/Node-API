@@ -8,6 +8,7 @@
     "ts:build": "rm -rf ./dist && tsc",
     "prestart": "npm run ts:build",
     "start": "node dist/app.js",
+    "seed:db" : "nodemon ./src/seed.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Oyegbile Praise",

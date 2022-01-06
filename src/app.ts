@@ -15,7 +15,12 @@ app.get('/api/characters', (req: Request, res: Response) => {
     connection.query(query, (err, rows) => {
         if(err) throw err;
 
-        return res.send(rows);
+        const retVal = {
+            data: rows,
+            message: rows.length === 0 ? 'No Record Found' : null
+        }
+        
+        return res.send(retVal);
     })
     // res.send('')
 })
@@ -29,10 +34,10 @@ app.get('/api/characters/:id', (req: Request, res: Response) => {
 
         const retVal = {
             data: rows.length > 0 ? rows[0] : null,
-            message: rows.length === 0 ? 'No Record Found' : ' '
+            message: rows.length === 0 ? 'No Record Found' : null
         }
         
-        return res.send(rows);
+        return res.send(retVal);
     })
     // res.send('  + id)
 })
