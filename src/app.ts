@@ -11,7 +11,12 @@ const connection = mysql.createConnection(connectionString);
 connection.connect()
 
 app.get('/api/characters', (req: Request, res: Response) => {
-    const query = 'SELECT * FROM Character'
+    const query = 'SELECT * FROM Character';
+    connection.query(query, (err, rows) => {
+        if(err) throw err;
+
+        return res.send(rows);
+    })
     res.send('')
 })
 
