@@ -11,18 +11,30 @@ const connection = mysql.createConnection(connectionString);
 connection.connect()
 
 app.get('/api/characters', (req: Request, res: Response) => {
-    const query = 'SELECT * FROM Character';
+    const query = 'select * from Characters'; 
     connection.query(query, (err, rows) => {
         if(err) throw err;
 
         return res.send(rows);
     })
-    res.send('')
+    // res.send('')
 })
 
 app.get('/api/characters/:id', (req: Request, res: Response) => {
     const id = req.params.id;
-    res.send(''  + id)
+
+    const query = `select * from Characters WHERE ID = ${id} LIMIT 1`; 
+    connection.query(query, (err, rows) => {
+        if(err) throw err;
+
+        const retVal = {
+            data: rows.length > 0 ? rows[0] : null,
+            message: rows.length === 0 ? 'No Record Found' : ' '
+        }
+        
+        return res.send(rows);
+    })
+    // res.send('  + id)
 })
 
 const port =process.env.PORT ||3000;
@@ -30,4 +42,4 @@ const port =process.env.PORT ||3000;
 app.listen(port, () => {
     console.log('App is listening on port ' + port);
     
-}); 
+});  
