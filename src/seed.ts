@@ -1,5 +1,6 @@
 import axios from "axios";
 import cheerio from 'cheerio'
+import { query } from "express";
 import mysql from 'mysql';
 
 const connectionString = process.env.DATABASE_URL || '';
@@ -50,19 +51,53 @@ const getCharacterInfo = async (chaacterName: string) => {
 
     const $ = cheerio.load(data);
 
-    const name = $('h2[data-source="name"]').text()
+    let name = $('h2[data-source="name"]').text()
     const species = $('div[data-source="species"] > div.pi-data-value.pi-font').text()
-    const image = $('.image.image-thumbnail > img').attr('src')
-    console.log(species);
+    const image = $('.image.image-thumbnail > img').attr('src');
+
+    if(!name) {
+        name = chaacterName.replace('_', ' ');
+    }
+
+    const characterInfo = {
+        name, species, image
+    }
+    // console.log(species);
+
+    return characterInfo;
     
 }
 
 const loadCharacter = async () => {
     const characterPageNames = await getCharacterPageName();
-    for (let i = 0; i < characterPageNames.length; i++) {
-        const characterInfo = await getCharacterInfo(characterPageNames[i])
+    const characterInfoPromises = characterPageNames.map(characterName =>
+    getCharacterInfo(characterName))
+    const characters = await Promise.all(characterInfoPromises)
+    // console.log(characters);
+    const values = characters.map((character, i) => [i, character.name, character.species,  character.image] )
+
+    const sql = 'INSERT INTO Characters (id, name, species, image) values ?';
+
+    connection.query(sql, [values], (err) => {
+        if (err) {
+            console.log('Ahhhh him no gree work');
+            console.log(err);
+            
+        } 
+        else console.log('Yyyyy DB is populated............');
         
-    }
+        
+    })
+
+    // const characterInfoArr = [];
+    // for (let i = 0; i < characterPageNames.length; i++) {
+    //     const characterInfo = await getCharacterInfo(characterPageNames[i])
+    //     characterInfoArr.push(characterInfo);
+
+    //     console.log(characterInfo);
+        
+         
+    // }
 }
 
 loadCharacter()
